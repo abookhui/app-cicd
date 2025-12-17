@@ -1,0 +1,10 @@
+apiV1.json
+db_dev.mv.db
+
+.idea/
+
+infra/secrets.tf
+infra/.terraform
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/terraform.tfstate.backup

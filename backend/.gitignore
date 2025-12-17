@@ -44,3 +44,5 @@ apiV1.json
 schema.d.ts
 src/main/resources/application-secret.yml
 src/main/generated
+
+.idea/
