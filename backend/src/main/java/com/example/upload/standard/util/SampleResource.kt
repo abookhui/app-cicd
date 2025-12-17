@@ -39,9 +39,23 @@ enum class SampleResource(
     val filePath: String
         get() = AppConfig.getResourcesSampleDirPath() + "/" + fileExtTypeCode + "/" + fileExtType2Code + "/" + fileName
 
+    // SampleResource.kt 내의 makeCopy 예시
     fun makeCopy(): String {
         val newFilePath = AppConfig.getTempDirPath() + "/" + fileName
-        Ut.file.copy(filePath, newFilePath)
+        val targetFile = java.io.File(newFilePath)
+        targetFile.parentFile?.mkdirs()
+
+        // ClassPathResource를 사용하여 JAR 내부 데이터를 스트림으로 읽음
+        val resourcePath = AppConfig.getResourcesSampleDirPath() + "/" + fileExtTypeCode + "/" + fileExtType2Code + "/" + fileName
+        val resource = org.springframework.core.io.ClassPathResource(resourcePath)
+
+        resource.inputStream.use { inputStream ->
+            java.nio.file.Files.copy(
+                inputStream,
+                targetFile.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING
+            )
+        }
 
         return newFilePath
     }

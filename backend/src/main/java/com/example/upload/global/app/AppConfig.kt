@@ -1,13 +1,11 @@
 package com.example.upload.global.app
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import lombok.SneakyThrows
 import org.apache.tika.Tika
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
-import org.springframework.core.io.ClassPathResource
 
 @Configuration
 class AppConfig {
@@ -21,56 +19,41 @@ class AppConfig {
         private lateinit var springServletMultipartMaxFileSize: String
         private lateinit var springServletMultipartMaxRequestSize: String
         private lateinit var tika: Tika
-        private var resourcesSampleDirPath: String? = null
-        
+
         fun getObjectMapper(): ObjectMapper = objectMapper
-        
+
         fun getGenFileDirPath(): String = genFileDirPath
-        
+
         fun getSiteBackUrl(): String = siteBackUrl
-        
+
         fun getSiteFrontUrl(): String = siteFrontUrl
-        
+
         fun getSpringServletMultipartMaxFileSize(): String = springServletMultipartMaxFileSize
-        
+
         fun getSpringServletMultipartMaxRequestSize(): String = springServletMultipartMaxRequestSize
 
-        
+        // 임시 디렉토리 경로 반환
         fun getTempDirPath(): String = System.getProperty("java.io.tmpdir")
 
-        
         fun getTika(): Tika = tika
 
+        /**
+         * JAR 실행 환경에서는 리소스의 '물리적 파일 경로'를 추출할 수 없습니다.
+         * 대신 리소스 파일들이 들어있는 루트 디렉토리 명칭(classpath 기준)만 반환합니다.
+         */
+        fun getResourcesSampleDirPath(): String = "sample"
 
-        fun getResourcesSampleDirPath(): String {
-            if (resourcesSampleDirPath == null) {
-                val resource = ClassPathResource("sample")
-
-                resourcesSampleDirPath = if (resource.exists()) {
-                    resource.file.absolutePath
-                } else {
-                    "src/main/resources/sample"
-                }
-            }
-
-            return resourcesSampleDirPath!!
-        }
-        
         val isNotProd: Boolean
             get() = !isProd
 
-        
         val isProd: Boolean
             get() = environment.matchesProfiles("prod")
 
-        
         val isDev: Boolean
             get() = environment.matchesProfiles("dev")
 
-        
         val isTest: Boolean
             get() = environment.matchesProfiles("test")
-
     }
 
     @Value("\${custom.site.backUrl}")
