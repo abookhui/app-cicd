@@ -1,1 +1,1 @@
-rootProject.name = "next"
+rootProject.name = "app"
